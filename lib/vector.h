@@ -31,5 +31,6 @@ void initialize_vector_str(vector_str_t* vector);
 void free_vector_str(vector_str_t* vector);
 void resize_vector_str(vector_str_t* vector);
 void append_vector_str(vector_str_t* vector, char* new_element);
+vector_uint_t parse_vector_uint(vector_str_t* vector);
 
 #endif //!VECTOR_LIB_H

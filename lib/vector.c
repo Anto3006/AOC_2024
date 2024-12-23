@@ -95,3 +95,12 @@ void append_vector_str(vector_str_t* vector, char* new_element){
 	vector->length += 1;
 }
 
+vector_uint_t parse_vector_uint(vector_str_t* vector){
+	vector_uint_t parsed_vector;
+	initialize_vector_uint(&parsed_vector);
+	for(size_t index = 0; index < vector->length; ++index){
+		uint32_t element = atoi(vector->data[index]);
+		append_vector_uint(&parsed_vector, element);
+	}
+	return parsed_vector;
+}

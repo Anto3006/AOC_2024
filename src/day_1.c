@@ -1,8 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <strings.h>
-#include <sys/types.h>
 #include "../lib/utilities.h"
 #include "../lib/vector.h"
 
