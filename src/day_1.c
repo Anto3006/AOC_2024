@@ -2,11 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <sys/types.h>
 #include "../lib/utilities.h"
 #include "../lib/vector.h"
 
 void load_values(char*, vector_uint_t*, vector_uint_t*);
 uint32_t distance(uint32_t first, uint32_t second);
+uint32_t count_apparitions(vector_uint_t*, uint32_t);
+uint32_t calculate_similarity(vector_uint_t*, vector_uint_t*);
 
 
 int main(int argc, char** argv){
@@ -30,12 +33,15 @@ int main(int argc, char** argv){
 			sum += distance(first_vector.data[index], second_vector.data[index]);
 		}
 
+		uint32_t similarity = calculate_similarity(&first_vector, &second_vector);
+
 
 		free_vector_uint(&second_vector);
 		free_vector_uint(&first_vector);
 		free(data);
 
-		printf("Result: %lu\n",sum);
+		printf("Result first part: %lu\n",sum);
+		printf("Result second part: %u\n",similarity);
 	}
 	return 0;
 }
@@ -60,4 +66,24 @@ uint32_t distance(uint32_t first, uint32_t second){
 	} else {
 		return second - first;
 	}
+}
+
+uint32_t count_apparitions(vector_uint_t* vector, uint32_t element){
+	uint32_t apparitions = 0;
+	for(size_t index = 0; index < vector->length; ++index){
+		if(vector->data[index] == element){
+			apparitions += 1;
+		}
+	}
+	return apparitions;
+}
+
+uint32_t calculate_similarity(vector_uint_t* first_vector, vector_uint_t* second_vector){
+	uint32_t similarity = 0;
+	for(size_t index = 0; index < first_vector->length; ++index){
+		uint32_t element = first_vector->data[index];
+		uint32_t apparitions = count_apparitions(second_vector, element);
+		similarity += element * apparitions;
+	}
+	return similarity;
 }
