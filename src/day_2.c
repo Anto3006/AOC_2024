@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <strings.h>
 #include "../lib/utilities.h"
 #include "../lib/vector.h"
 

@@ -1,7 +1,6 @@
 #include "vector.h"
 #include <stdint.h>
 #include <stdlib.h>
-#include <strings.h>
 
 
 void initialize_vector_uint(vector_uint_t* vector){
