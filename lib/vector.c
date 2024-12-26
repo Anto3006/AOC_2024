@@ -1,6 +1,7 @@
 #include "vector.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 
 void initialize_vector_uint(vector_uint_t* vector){
@@ -64,6 +65,15 @@ size_t _quicksort_partition_aux(uint32_t *array, size_t lo, size_t hi){
 	array[hi] = array[pivot_index];
 	array[pivot_index] = swap_aux;
 	return pivot_index;
+}
+
+bool is_in_vector_uint(vector_uint_t* vector, uint32_t element){
+	for(size_t index = 0; index < vector->length; ++index){
+		if(vector->data[index] == element){
+			return true;
+		}
+	}
+	return false;
 }
 
 void initialize_vector_str(vector_str_t* vector){
