@@ -9,7 +9,8 @@ all: \
 	day01 \
 	day02 \
 	day03 \
-	day04
+	day04 \
+	day05
 
 vector: lib/vector.c
 	$(CC) $(CFLAGS) -c $< -o $(BUILD_DIR)/$@.o
@@ -30,5 +31,9 @@ day03: src/day_3.c utilities vector
 	$(CC) $(CFLAGS) $(BUILD_DIR)/$@.o $(BUILD_DIR)/utilities.o $(BUILD_DIR)/vector.o -o $(EXEC_DIR)/$@
 
 day04: src/day_4.c utilities vector
+	$(CC) $(CFLAGS) -c $< -o $(BUILD_DIR)/$@.o
+	$(CC) $(CFLAGS) $(BUILD_DIR)/$@.o $(BUILD_DIR)/utilities.o $(BUILD_DIR)/vector.o -o $(EXEC_DIR)/$@
+
+day05: src/day_5.c utilities vector
 	$(CC) $(CFLAGS) -c $< -o $(BUILD_DIR)/$@.o
 	$(CC) $(CFLAGS) $(BUILD_DIR)/$@.o $(BUILD_DIR)/utilities.o $(BUILD_DIR)/vector.o -o $(EXEC_DIR)/$@
