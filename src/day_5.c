@@ -16,6 +16,8 @@ void add_rule(order_rules_t*,uint32_t,uint32_t);
 order_rules_t* parse_rules(char*); //Numbers between 0 and 99 only
 bool check_page_ordering(vector_uint_t* , order_rules_t*);
 uint32_t calculate_sum_middle_correct_orders(char*,order_rules_t*);
+void correct_page_ordering(vector_uint_t*, order_rules_t*);
+uint32_t calculate_sum_middle_incorrect_orders(char*,order_rules_t*);
 
 int main(int argc, char** argv){
 	if (argc > 1){
@@ -25,7 +27,8 @@ int main(int argc, char** argv){
 		char* rules_data = information.data[0];
 		char* page_order_data = information.data[1];
 		order_rules_t* rules = parse_rules(rules_data);
-		uint32_t sum = calculate_sum_middle_correct_orders(page_order_data,rules);
+		uint32_t sum_correct = calculate_sum_middle_correct_orders(page_order_data,rules);
+		uint32_t sum_incorrect = calculate_sum_middle_incorrect_orders(page_order_data,rules);
 		for(size_t number = 0; number < 100; ++number){
 			free_vector_uint(&rules[number].before);
 			free_vector_uint(&rules[number].after);
@@ -33,7 +36,8 @@ int main(int argc, char** argv){
 		free(rules);
 		free_vector_str(&information);
 		free(data);
-		printf("Result part 1: %u\n",sum);
+		printf("Result part 1: %u\n",sum_correct);
+		printf("Result part 2: %u\n",sum_incorrect);
 	}
 	return 0;
 }
@@ -110,3 +114,59 @@ uint32_t calculate_sum_middle_correct_orders(char* page_order_data, order_rules_
 	free_vector_str(&page_orderings);
 	return sum;
 }
+
+void correct_page_ordering(vector_uint_t* page_order, order_rules_t* rules){
+	bool is_order_correct = false;
+	bool found_error = false;
+	while(!is_order_correct){
+		found_error = false;
+		for(size_t index = 0; index < page_order->length && !found_error; ++index){
+			uint32_t number = page_order->data[index];
+			if(index > 0){
+				bool reached_beginning = false;
+				for(size_t index_before = index-1;!reached_beginning && !found_error; --index_before){
+					uint32_t number_before = page_order->data[index_before];
+					if(is_in_vector_uint(&rules[number].after,number_before)){
+						found_error = true;
+						page_order->data[index] = number_before;
+						page_order->data[index_before] = number;
+					}
+					if(index_before == 0){
+						reached_beginning = true;
+					}
+				}
+			}
+			for(size_t index_after = index+1;index_after < page_order->length && !found_error; ++index_after){
+				uint32_t number_after = page_order->data[index_after];
+				if(is_in_vector_uint(&rules[number].before,number_after)){
+					found_error = true;
+					page_order->data[index] = number_after;
+					page_order->data[index_after] = number;
+				}
+			}
+		}
+		if(!found_error){
+			is_order_correct = true;
+		}
+	}
+}
+
+uint32_t calculate_sum_middle_incorrect_orders(char* page_order_data,order_rules_t* rules){
+	vector_str_t page_orderings = split_string(page_order_data,"\n");
+	uint32_t sum = 0;
+	for(size_t index = 0; index < page_orderings.length; ++index){
+		char* page_order = page_orderings.data[index];
+		vector_str_t page_order_str = split_string(page_order,",");
+		vector_uint_t page_order_uint = parse_vector_uint(&page_order_str);
+		if(!check_page_ordering(&page_order_uint, rules)){
+			correct_page_ordering(&page_order_uint, rules);
+			size_t middle = page_order_uint.length / 2;
+			sum += page_order_uint.data[middle];
+		}
+		free_vector_uint(&page_order_uint);
+		free_vector_str(&page_order_str);
+	}
+	free_vector_str(&page_orderings);
+	return sum;
+}
+
