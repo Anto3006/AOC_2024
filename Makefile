@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wstrict-overflow -Wwrite-strings -std=c2x
+CFLAGS = -Wall -Wextra -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wstrict-overflow -Wwrite-strings -std=c2x -g
 BUILD_DIR := ./build
 EXEC_DIR := ./bin
 
@@ -15,7 +15,8 @@ all: \
 	day07 \
 	day08 \
 	day09 \
-	day10
+	day10 \
+	day11
 
 vector: lib/vector.c
 	$(CC) $(CFLAGS) -c $< -o $(BUILD_DIR)/$@.o
@@ -62,3 +63,7 @@ day09: src/day_9.c utilities vector
 day10: src/day_10.c utilities vector
 	$(CC) $(CFLAGS) -c $< -o $(BUILD_DIR)/$@.o
 	$(CC) $(CFLAGS) $(BUILD_DIR)/$@.o $(BUILD_DIR)/utilities.o $(BUILD_DIR)/vector.o -o $(EXEC_DIR)/$@
+
+day11: src/day_11.c utilities vector
+	$(CC) $(CFLAGS) -c  $< -o $(BUILD_DIR)/$@.o -lm
+	$(CC) $(CFLAGS) $(BUILD_DIR)/$@.o $(BUILD_DIR)/utilities.o $(BUILD_DIR)/vector.o -o $(EXEC_DIR)/$@ -lm
